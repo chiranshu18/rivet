@@ -15,11 +15,21 @@ $dur: 0.8s;
 
 .screen {
   @include screen;
+}
+
+// Same layering contract as components/Screen: backgrounds at z 0, content at z 1.
+.bg {
+  @include fill;
+  z-index: 0;
   background: linear-gradient(180deg, #3b0220 0%, #5d0638 45%, #9a1172 75%, #b8158a 100%);
 }
 
 .canvas {
   @include design-canvas;
+}
+
+.content {
+  z-index: 1;
 }
 
 // ---- White card --------------------------------------------------------

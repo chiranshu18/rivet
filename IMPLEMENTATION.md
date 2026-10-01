@@ -21,7 +21,7 @@ one scroll gesture (wheel / swipe / key) = the whole screen's content changes to
 | FAQ accordion (single open) | ✅ done |
 | Final CTA → footer reveal (sub-step) | ✅ done (CSS transition) |
 | Default screen enter/exit transition | ✅ basic fade+slide (screens without choreography) |
-| **Per-screen animations** (captured from the Figma prototype, see §8) | 🟡 splash → hero → update → story → step-profile → step-chemistry → step-intro done; testimonials → FAQ → final CTA TODO |
+| **Per-screen animations** (captured from the Figma prototype, see §8) | ✅ all screens choreographed (batches 1–3); awaiting owner review + timing tuning |
 | Real images / 3D assets | ⏳ TODO – placeholders everywhere (see §6) |
 | Real fonts | ⏳ Google Font substitutes for now (see §5) |
 | CTA / menu / store buttons | ❌ intentionally non-functional |
@@ -248,6 +248,7 @@ from slowed-down captures of the prototype – tune them in the `*.motion.js` fi
   (used by **enter/center** variants in the incoming screen).
 * **Two kinds of screens** (`variants` in `src/config/screens.js`):
   * *Default* – the whole layer slides + fades (`defaultScreenVariants`, `config/transitions.js`).
+    No screen uses it any more; it's the fallback for new screens without choreography.
   * *Choreographed* – layer uses `stageVariants` (no motion of its own); each element animates
     itself. The layer's `enter`/`center`/`exit` labels are inherited by every `motion.*`
     child that has `variants`, so elements only need `variants` + `custom`.
@@ -258,6 +259,9 @@ from slowed-down captures of the prototype – tune them in the `*.motion.js` fi
   Poses/transitions may be functions `(t, other)` where `other` is the screen on the other
   side of the transition (works the same in both directions) – used e.g. by `StepLayout`
   to behave differently next to the story screen vs. another step.
+  `center` only resets the properties the enter pose displaced, so a property no pose
+  touches gets no inline style (FinalCta photos rely on this: their opacity belongs to the
+  CSS sub-step transition).
 * **In a screen:** `const m = useChoreo();` then `<Asset ... {...m(v.topLeft)} />` /
   `<motion.h2 {...m(v.title)}>` with `v` imported from the screen's `*.motion.js`.
 * **Backgrounds crossfade.** Choreographed screens pass their background class as
@@ -266,6 +270,9 @@ from slowed-down captures of the prototype – tune them in the `*.motion.js` fi
   stacking context, `.bg` is `z-index: 0` and `.canvas` `z-index: 1`, so the **outgoing
   screen's elements stay visible above the incoming background** while they animate out.
   (The incoming *canvas* is still above the outgoing canvas.)
+  `FinalCta` doesn't use `Screen` (it needs the footer *under* the white card); it follows the
+  same contract by hand: gradient + footer + card in one `.bg` layer (`backgroundVariants`,
+  z 0, so the footer never shows through the fading card), content canvas at z 1.
 * **Logo flight (splash → header):** the splash logo and header `Logo` share
   `layoutId="rivet-logo"` (`layoutCrossfade={false}`), so Framer animates the header logo from
   the splash box to its own; the color goes pink → tone with a CSS transition (`Header.jsx`).
@@ -289,16 +296,22 @@ props), move the screen background to a `.bg` class passed as `bg`, and set
 | story → step-profile | Story content lifts + fades. The big "Dating goes social" text travels up from the bottom of the story screen and grows into the step's background text (story copy fades out, step copy fades in – a manual shared-element morph, `BG_TEXT_MORPH`). Bg crossfades to cream. Collage rises from below (most travel), then badge/title/body/CTA. | `Story.motion.js`, `StepLayout.motion.js` |
 | step-profile → step-chemistry | Carousel: collage slides out left, next collage slides in from the right. Title/body crossfade with a small rise; badge number swaps (fade); background text and CTA stay put (the incoming copy of the bg text is revealed only after the outgoing collage has faded, `BG_TEXT_SWAP_S`). Bg + bottom glow crossfade (glow yellow → blue). | `StepLayout.motion.js` |
 | step-chemistry → step-intro | Same carousel. Bg crossfades cream → night, background text fades out, header logo turns white (CSS), glow → pink. | `StepLayout.motion.js` |
-| step-intro → testimonials | **TODO (batch 3)** – currently step content lifts + fades, testimonials uses the default layer transition. | |
-| testimonials → faq → final CTA (+ footer sub-step) | **TODO (batch 3).** | |
+| step-intro → testimonials | Intro content lifts + fades. Bg crossfades night → pink gradient (the blurred pink header fade follows the bg). Cards rise from below one after another (top-left first, bottom-left last), heading rises behind them, then the CTA. The prototype splits this into two frames (cards land ~75 px low, then everything drifts up into the final layout); folded into one rise here. | `StepLayout.motion.js`, `Testimonials.motion.js` |
+| testimonials → faq | Quick dissolve: testimonials content fades out (0.35 s), white bg fades in, FAQ balloons/title/list fade in with a small rise (staggered). | `Testimonials.motion.js`, `Faq.motion.js` |
+| faq → final CTA | **Not in the prototype** (the click lands straight on the final CTA; nothing captured) – chosen to match the rest: FAQ content lifts + fades; final CTA photos fly in from outside the device (left/right, like the hero), copy rises from below in reading order. White card + footer crossfade in as the bg layer. | `Faq.motion.js`, `FinalCta.motion.js` |
+| final CTA sub-step 0 → 1 (footer) | **Not in the prototype** (it ends on the final CTA; its last frame matches our compact layout without photos). Kept the existing CSS transition: card shrinks to 505 px with rounded bottom, content moves up, photos fade + scale down (0.8 s). | `FinalCta.module.scss` |
 
 Prototype frame ids (for re-capturing): splash `1-10669`, hero `1-11246`, update `1-10698`,
-story `1-10751`, step-profile `1-10820`, step-chemistry `1-10847`, step-intro `1-10872`.
+story `1-10751`, step-profile `1-10820`, step-chemistry `1-10847`, step-intro `1-10872`,
+testimonials `1-10898` (cards low) → `1-10975` (final layout), faq + final CTA `1-11104`
+(the final CTA doesn't get its own node id in the URL).
 
 ### 8.3 Other animation hooks
 
 * **Sub-step animations** – react to the `subStep` prop (CSS classes, or `animate={...}`);
-  `FinalCta` currently uses CSS transitions.
+  `FinalCta` uses CSS transitions. Its photos are animated by both systems (Framer: x/rotate
+  on screen enter/exit; CSS: opacity/`scale` on sub-step), so keep opacity out of their
+  `choreo` poses.
 
 ---
 
@@ -311,7 +324,8 @@ story `1-10751`, step-profile `1-10820`, step-chemistry `1-10847`, step-intro `1
 - [ ] Testimonials: real testimonial data (design repeats one).
 - [ ] FinalCta sub-step 1: is the overlap (button over heading) the intended end state?
 - [ ] Animations: owner review of the captured choreography + timing fine-tuning (§8.2).
-- [ ] Animations: is "reverse of the forward transition" right for scrolling up? (currently yes)
+- [x] Animations: scrolling up = reverse of the forward transition (confirmed by owner).
+- [ ] Animations: faq → final CTA and the footer sub-step aren't in the prototype – review the chosen motion.
 - [ ] Hamburger menu: is a menu overlay needed later? (currently a no-op button)
 
 ---
@@ -323,3 +337,4 @@ story `1-10751`, step-profile `1-10820`, step-chemistry `1-10847`, step-intro `1
 | 2026-10-01 | Initial static implementation of all screens, step navigation, splash, FAQ accordion, footer sub-step, asset registry, docs + design references. |
 | 2026-10-01 | Animations batch 1: choreography system (`src/animation/`), splash → hero (logo flight, header intro), hero → update, update → story. |
 | 2026-10-01 | Animations batch 2: `StepLayout` choreography – story → step-profile (bg-text morph), step-profile → step-chemistry → step-intro (carousel). `Screen` backdrop now lives in the crossfading `bg` layer. Logo color handoff timing fix. Docs §8. |
+| 2026-10-01 | Animations batch 3: step-intro → testimonials (cards rise), testimonials → faq (dissolve), faq → final CTA (photos fly in, copy rises; not in prototype). FinalCta background/footer/card moved into a crossfading bg layer. `choreo` `center` only resets displaced properties. |

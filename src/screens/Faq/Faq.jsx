@@ -3,7 +3,9 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { HiChevronDown, HiMinus, HiPlus } from 'react-icons/hi2';
 import Screen from 'components/Screen';
 import Asset from 'components/Asset';
+import { useChoreo } from 'animation/ScreenTransition';
 import { FAQ_CATEGORIES } from './faqData';
+import { faqMotion as v } from './Faq.motion';
 import styles from './Faq.module.scss';
 
 const collapse = {
@@ -20,6 +22,7 @@ const collapse = {
  * first and only changes step once the list hits its top/bottom edge.
  */
 export default function Faq() {
+  const m = useChoreo();
   const [openCategory, setOpenCategory] = useState(FAQ_CATEGORIES[0].id);
   const [openQuestion, setOpenQuestion] = useState(0);
 
@@ -31,16 +34,16 @@ export default function Faq() {
   const toggleQuestion = (i) => setOpenQuestion((cur) => (cur === i ? null : i));
 
   return (
-    <Screen className={styles.screen}>
-      <Asset name="faqBalloons" label="Heart + X balloons" className={styles.balloons} />
+    <Screen bg={styles.bg}>
+      <Asset name="faqBalloons" label="Heart + X balloons" className={styles.balloons} {...m(v.balloons)} />
 
-      <h2 className={styles.title}>
+      <motion.h2 className={styles.title} {...m(v.title)}>
         Got a question?
         <br />
         Most do!
-      </h2>
+      </motion.h2>
 
-      <div className={styles.list} data-scrollable>
+      <motion.div className={styles.list} data-scrollable {...m(v.list)}>
         {FAQ_CATEGORIES.map((cat) => {
           const catOpen = openCategory === cat.id;
           return (
@@ -89,7 +92,7 @@ export default function Faq() {
             </section>
           );
         })}
-      </div>
+      </motion.div>
     </Screen>
   );
 }

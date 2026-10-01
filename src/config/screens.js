@@ -29,12 +29,13 @@ export const SCREENS = [
   { id: 'step-profile', figma: 'Menu_Mobile-2', Component: StepProfile, variants: stageVariants, steps: [{ logo: 'dark', hint: 'light' }] },
   { id: 'step-chemistry', figma: 'Menu_Mobile-3', Component: StepChemistry, variants: stageVariants, steps: [{ logo: 'dark', hint: 'light' }] },
   { id: 'step-intro', figma: 'Menu_Mobile-4', Component: StepIntro, variants: stageVariants, steps: [{ logo: 'light', hint: 'outline' }] },
-  { id: 'testimonials', figma: 'Menu_Mobile-5', Component: Testimonials, steps: [{ logo: 'light', hint: 'light' }] },
-  { id: 'faq', figma: 'Menu_Mobile-6', Component: Faq, steps: [{ logo: 'dark', hint: 'light' }] },
+  { id: 'testimonials', figma: 'Menu_Mobile-5', Component: Testimonials, variants: stageVariants, steps: [{ logo: 'light', hint: 'light' }] },
+  { id: 'faq', figma: 'Menu_Mobile-6', Component: Faq, variants: stageVariants, steps: [{ logo: 'dark', hint: 'light' }] },
   {
     id: 'final-cta',
     figma: 'Menu_Mobile-7 / Menu_Mobile-8',
     Component: FinalCta,
+    variants: stageVariants,
     steps: [
       { logo: 'dark', hint: 'light' },
       { logo: 'dark', hint: null },

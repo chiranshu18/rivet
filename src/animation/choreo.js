@@ -24,11 +24,21 @@ const resolve = (value, t, other) => (typeof value === 'function' ? value(t, oth
  *           being left on enter, the one being entered on exit), so a pose can
  *           depend on the neighbour regardless of direction.
  * Pose `x`/`y` may also be % of the element's own size.
+ *
+ * `center` only resets the properties the enter pose displaced, so properties
+ * a pose never touches (e.g. opacity driven by CSS) get no inline style.
  */
 export function choreo({ in: inPose, out: outPose, inTransition, outTransition }) {
+  const enterPose = (t) => resolve(t.direction > 0 ? inPose : outPose, t, t.from);
   return {
-    enter: (t) => resolve(t.direction > 0 ? inPose : outPose, t, t.from),
-    center: (t) => ({ ...REST, transition: resolve(inTransition, t, t.from) }),
+    enter: enterPose,
+    center: (t) => {
+      const rest = {};
+      Object.keys(enterPose(t)).forEach((key) => {
+        if (key in REST) rest[key] = REST[key];
+      });
+      return { ...rest, transition: resolve(inTransition, t, t.from) };
+    },
     exit: (t) => ({
       ...resolve(t.direction > 0 ? outPose : inPose, t, t.to),
       transition: resolve(outTransition, t, t.to),

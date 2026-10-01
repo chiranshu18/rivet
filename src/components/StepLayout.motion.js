@@ -9,7 +9,9 @@ import { choreo, EASE_IN, EASE_IN_OUT, EASE_OUT } from 'animation/choreo';
 //   left while the next one slides in from the right; title/body crossfade with
 //   a small rise; the badge number swaps; background text + CTA stay put; the
 //   background and bottom glow crossfade (Screen `bg`).
-// step-intro → testimonials: not captured yet; lifts + fades.
+// step-intro → testimonials: the intro content lifts and fades while the
+//   background crossfades to the testimonials gradient (Testimonials.motion.js
+//   has the incoming half).
 
 const isStep = (id) => typeof id === 'string' && id.startsWith('step-');
 // Steps that render the big background text (StepIntro passes showBgText={false}).
