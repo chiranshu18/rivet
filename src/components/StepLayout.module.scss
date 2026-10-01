@@ -1,13 +1,20 @@
 @use '../styles/tokens' as *;
 
-.screen {
-  &.cream {
-    background: $c-cream;
-  }
+// The tone class (`.night`) goes on the section for descendant theming below;
+// the matching *Bg class goes on the crossfading background layer.
+.creamBg {
+  background: $c-cream;
+}
 
-  &.night {
-    background: $c-night;
-  }
+.nightBg {
+  background: $c-night;
+}
+
+// Full-canvas wrapper so the screen's collage moves as one group while its
+// children keep their design-px coordinates.
+.collage {
+  position: absolute;
+  inset: 0;
 }
 
 .glow {

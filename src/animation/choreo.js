@@ -7,7 +7,7 @@ export const EASE_IN_OUT = [0.65, 0, 0.35, 1];
 
 const REST = { x: 0, y: 0, rotate: 0, scale: 1, opacity: 1 };
 
-const resolve = (value, t) => (typeof value === 'function' ? value(t) : value);
+const resolve = (value, t, other) => (typeof value === 'function' ? value(t, other) : value);
 
 /**
  * Enter/center/exit variants for one element, built from two poses.
@@ -18,15 +18,21 @@ const resolve = (value, t) => (typeof value === 'function' ? value(t) : value);
  * Scrolling UP swaps them (enter from `out`, exit to `in`), so going back
  * replays the forward motion in reverse.
  *
- * Poses and transitions can be objects or functions of the transition info
- * `t = { from, to, direction, u }` (u = CSS px per design px, for design-unit
- * distances: `y: 600 * t.u`). Pose `x`/`y` may also be % of the element's size.
+ * Poses and transitions can be objects or functions `(t, other)`:
+ *   t     = { from, to, direction, u } (u = CSS px per design px: `y: 600 * t.u`)
+ *   other = id of the screen on the other side of this transition (the one
+ *           being left on enter, the one being entered on exit), so a pose can
+ *           depend on the neighbour regardless of direction.
+ * Pose `x`/`y` may also be % of the element's own size.
  */
 export function choreo({ in: inPose, out: outPose, inTransition, outTransition }) {
   return {
-    enter: (t) => resolve(t.direction > 0 ? inPose : outPose, t),
-    center: (t) => ({ ...REST, transition: resolve(inTransition, t) }),
-    exit: (t) => ({ ...resolve(t.direction > 0 ? outPose : inPose, t), transition: resolve(outTransition, t) }),
+    enter: (t) => resolve(t.direction > 0 ? inPose : outPose, t, t.from),
+    center: (t) => ({ ...REST, transition: resolve(inTransition, t, t.from) }),
+    exit: (t) => ({
+      ...resolve(t.direction > 0 ? outPose : inPose, t, t.to),
+      transition: resolve(outTransition, t, t.to),
+    }),
   };
 }
 

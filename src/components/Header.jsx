@@ -19,11 +19,12 @@ export default function Header({ logoTone = 'dark', intro = false }) {
 
   useEffect(() => {
     if (!intro) return undefined;
-    const raf = requestAnimationFrame(() => setLogoPhase('flying'));
-    const t = window.setTimeout(() => setLogoPhase('done'), LOGO_FLIGHT_S * 1000 + 100);
+    // Short delay so the pink state paints first and the color transition runs.
+    const fly = window.setTimeout(() => setLogoPhase('flying'), 50);
+    const done = window.setTimeout(() => setLogoPhase('done'), LOGO_FLIGHT_S * 1000 + 100);
     return () => {
-      cancelAnimationFrame(raf);
-      window.clearTimeout(t);
+      window.clearTimeout(fly);
+      window.clearTimeout(done);
     };
   }, [intro]);
 

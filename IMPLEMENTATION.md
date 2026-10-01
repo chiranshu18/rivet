@@ -20,8 +20,8 @@ one scroll gesture (wheel / swipe / key) = the whole screen's content changes to
 | Splash/loader | ✅ done (timed, auto-advances) |
 | FAQ accordion (single open) | ✅ done |
 | Final CTA → footer reveal (sub-step) | ✅ done (CSS transition) |
-| Default screen enter/exit transition | ✅ basic fade+slide placeholder |
-| **Per-screen custom animations** | ⏳ TODO (planned, see §8) |
+| Default screen enter/exit transition | ✅ basic fade+slide (screens without choreography) |
+| **Per-screen animations** (captured from the Figma prototype, see §8) | 🟡 splash → hero → update → story → step-profile → step-chemistry → step-intro done; testimonials → FAQ → final CTA TODO |
 | Real images / 3D assets | ⏳ TODO – placeholders everywhere (see §6) |
 | Real fonts | ⏳ Google Font substitutes for now (see §5) |
 | CTA / menu / store buttons | ❌ intentionally non-functional |
@@ -43,6 +43,11 @@ one scroll gesture (wheel / swipe / key) = the whole screen's content changes to
 | FAQ | Simple accordion, stays inside the screen, **only one open at a time**. |
 | Assets | **Labelled dashed placeholders**, swappable from one registry file. |
 | CTAs | Non-functional. |
+| Animation source | **"Prototype 1" flow** of the Figma prototype (ignore "Flow 2"). Captured by the agent; owner reviews and fine-tunes timings later. |
+| Animation delivery | **2–3 screens per batch, one commit per batch.** |
+| Splash → hero trigger | Splash still **auto-advances** after `SPLASH_MS`. |
+| Smart Animate "ghosting" | **Not replicated** – clean motion only. |
+| Scrolling up | **Plays the forward transition in reverse** (prototype only defines forward). |
 
 ---
 
@@ -100,12 +105,15 @@ src/
     transitions.js       # default enter/exit variants + SCREEN_TRANSITION_MS (input lock)
   hooks/
     useStepNavigation.js # wheel / touch / keyboard → one step per gesture
-  components/            # shared, presentational
-    Screen.jsx           # full-bleed layer + centered 430x932 design canvas
-    StepLayout.jsx       # shell for the 3 numbered "how it works" steps
+  animation/
+    choreo.js            # choreo() variant builder, eases, stageVariants, backgroundVariants
+    ScreenTransition.js  # transition context, useChoreo(), designUnit()
+  components/            # shared, presentational (Asset/Button/ChatBubble/... render motion.* and forward motion props)
+    Screen.jsx           # full-bleed layer + optional crossfading `bg` layer + centered 430x932 design canvas
+    StepLayout.jsx       # shell for the 3 numbered "how it works" steps (+ StepLayout.motion.js)
     Header.jsx, Logo.jsx, ScrollHint.jsx, Button.jsx, StoreIcons.jsx,
     ChatBubble.jsx, StepBadge.jsx, BigBackgroundText.jsx, Asset.jsx
-  screens/<Name>/        # one folder per screen: <Name>.jsx + <Name>.module.scss
+  screens/<Name>/        # one folder per screen: <Name>.jsx + <Name>.module.scss (+ <Name>.motion.js if choreographed)
   assets/
     index.js             # ASSET REGISTRY (null = placeholder)
     images/              # drop real files here
@@ -118,13 +126,15 @@ docs/design/             # reference screenshots, numbered in flow order
 ### 5.1 Rendering model
 
 ```
-<main .app>                       430px column, overflow hidden, owns --u
-  <AnimatePresence custom=dir>    keyed by SCREEN id (not step) → sub-steps re-render in place
-    <motion.div .layer>           enter/exit variants (default or per-screen)
-      <ScreenComponent subStep direction />
-  <Header logoTone />             persistent, above screens (z 50)
-  <ScrollHint variant />          persistent pill, click = next()
-  <Splash />                      z 100, removed after SPLASH_MS
+<MotionConfig reducedMotion="user">          honours prefers-reduced-motion
+ <ScreenTransitionContext value={transition}> { from, to, direction, u } – see §8
+  <main .app>                                 430px column, overflow hidden, owns --u
+    <AnimatePresence custom={transition}>     keyed by SCREEN id (not step) → sub-steps re-render in place
+      <motion.div .layer>                     mounted once the splash ends; layer variants (default or stageVariants)
+        <ScreenComponent subStep direction />
+    <Header logoTone intro />                 persistent, above screens (z 50); mounted once the splash ends
+    <ScrollHint variant />                    persistent pill, click = next()
+    <Splash />                                z 100, removed after SPLASH_MS
 ```
 
 ### 5.2 Scaling: design px → real px (`u()`)
@@ -134,13 +144,15 @@ docs/design/             # reference screenshots, numbered in flow order
 * `--u` (set on `.app`) = `min(100vw, 430px, 100dvh × 430/932) / 430`
   → the 430×932 canvas is **fit ("contain")** in the column; nothing gets cropped on short or
   narrow phones. Backgrounds stay full-bleed.
-* `Screen` renders a full-bleed `<section>` (put backgrounds/glows on it) and a centered
+* `Screen` renders a full-bleed `<section>` (backgrounds go on its `bg` layer for
+  choreographed screens, see §8.1, otherwise on `className`) and a centered
   `.canvas` (430×932 design units) where content is absolutely positioned using
   coordinates measured from the screenshots.
 * Helpers in `_tokens.scss`:
   * `@include place($top, $left, $w, $h, $rot)` – absolute placement in design px. Uses the
-    standalone CSS `rotate` property (not `transform`) so Framer Motion can animate
-    `x/y/scale` later without clobbering the tilt.
+    standalone CSS `rotate` property (not `transform`) so Framer Motion's `x/y/scale/rotate`
+    (which write `transform`) compose with the tilt instead of clobbering it.
+  * Same rule for centering: `left: 50%; translate: -50% 0;` – **never** `transform: translateX(-50%)`.
   * `@include text-block($top, $pad)` – full-width centered text at a given top.
   * `@include display($size, $lh)` / `@include body($size, $lh, $weight)` – typography.
 
@@ -149,8 +161,9 @@ docs/design/             # reference screenshots, numbered in flow order
 * Listens on `window` for `wheel` (non-passive, `preventDefault`), `touchstart/move/end`,
   `keydown` (↓ PageDown Space = next, ↑ PageUp = prev, Home/End).
 * **One gesture = one step.** After a step change, input is locked for `SCREEN_TRANSITION_MS`
-  (900 ms). Trackpad inertia is handled: wheel events < 220 ms apart are treated as the same
-  gesture, so a single long swipe never skips two screens.
+  (1100 ms) – also right after the splash ends, so the hero intro can play. Trackpad inertia is
+  handled: wheel events < 220 ms apart are treated as the same gesture, so a single long swipe
+  never skips two screens.
 * Swipe threshold 50 px.
 * **Inner scroll areas:** any element with `data-scrollable` (e.g. FAQ list) gets the scroll
   first; the step only changes once that element is at its top/bottom edge.
@@ -220,21 +233,72 @@ where (e.g. "Photo: couple on sofa").
 
 ---
 
-## 8. Adding per-screen animations (next phase)
+## 8. Animations
 
-Hooks are already in place:
+Source: Figma prototype, **"Prototype 1"** flow. Timings/distances are **approximations** read
+from slowed-down captures of the prototype – tune them in the `*.motion.js` files.
 
-1. **Screen enter/exit** – add `variants` to a screen entry in `src/config/screens.js`
-   (Framer Motion variants with `enter` / `center` / `exit`, receiving `direction` as `custom`).
-   Default lives in `src/config/transitions.js`.
-2. **Inner choreography** – inside a screen, wrap elements in `motion.*` and use
-   `initial` / `animate` / `exit` (exit works because each screen is a direct child of
-   `AnimatePresence`). Use `direction` prop to reverse for upward scrolls.
-3. **Sub-step animations** – react to the `subStep` prop (CSS classes, or `animate={...}`).
-4. Keep `SCREEN_TRANSITION_MS` ≥ the longest enter animation, otherwise users can scroll
-   mid-transition.
-5. Tilt uses CSS `rotate`, so animating `x`, `y`, `scale` in Framer won't reset it; animate
-   `rotate` in Framer only if you also remove it from SCSS for that element.
+### 8.1 How it works
+
+* **Transition info.** On every screen change App builds
+  `t = { from, to, direction, u }` (`from` = previous screen id, `'splash'` on first load,
+  `null` for `?step=` deep links; `u` = CSS px per design px, so distances can be written in
+  design px: `y: 600 * t.u`). It is passed as `AnimatePresence custom` (used by **exit**
+  variants of every element in the outgoing screen) and via `ScreenTransitionContext`
+  (used by **enter/center** variants in the incoming screen).
+* **Two kinds of screens** (`variants` in `src/config/screens.js`):
+  * *Default* – the whole layer slides + fades (`defaultScreenVariants`, `config/transitions.js`).
+  * *Choreographed* – layer uses `stageVariants` (no motion of its own); each element animates
+    itself. The layer's `enter`/`center`/`exit` labels are inherited by every `motion.*`
+    child that has `variants`, so elements only need `variants` + `custom`.
+* **`choreo({ in, out, inTransition, outTransition })`** (`animation/choreo.js`) builds an
+  element's variants from two poses, written for scrolling **down**:
+  `in` = where it comes from when its screen is entered, `out` = where it goes when its screen
+  is left. Scrolling **up** swaps them, so going back replays the motion in reverse.
+  Poses/transitions may be functions `(t, other)` where `other` is the screen on the other
+  side of the transition (works the same in both directions) – used e.g. by `StepLayout`
+  to behave differently next to the story screen vs. another step.
+* **In a screen:** `const m = useChoreo();` then `<Asset ... {...m(v.topLeft)} />` /
+  `<motion.h2 {...m(v.title)}>` with `v` imported from the screen's `*.motion.js`.
+* **Backgrounds crossfade.** Choreographed screens pass their background class as
+  `<Screen bg={styles.bg}>` (not `className`). `backgroundVariants`: the incoming bg fades in
+  over 0.6 s, the outgoing one fades only after that. Layering: choreographed layers create no
+  stacking context, `.bg` is `z-index: 0` and `.canvas` `z-index: 1`, so the **outgoing
+  screen's elements stay visible above the incoming background** while they animate out.
+  (The incoming *canvas* is still above the outgoing canvas.)
+* **Logo flight (splash → header):** the splash logo and header `Logo` share
+  `layoutId="rivet-logo"` (`layoutCrossfade={false}`), so Framer animates the header logo from
+  the splash box to its own; the color goes pink → tone with a CSS transition (`Header.jsx`).
+* Rotations from SCSS use the CSS `rotate` property; Framer `rotate` adds **on top** of it.
+* Keep `SCREEN_TRANSITION_MS` (input lock) roughly ≥ the longest choreography.
+* `prefers-reduced-motion` is honoured (`MotionConfig reducedMotion="user"`: transforms off,
+  fades kept).
+
+**Adding a screen's choreography:** create `screens/<Name>/<Name>.motion.js` with one
+`choreo()` per element, spread `m(v.x)` on the elements (shared components forward motion
+props), move the screen background to a `.bg` class passed as `bg`, and set
+`variants: stageVariants` on its `SCREENS` entry.
+
+### 8.2 Transition specs (forward direction; reverse = mirrored)
+
+| Transition | What happens | Where |
+| --- | --- | --- |
+| splash → hero | Splash gradient fades (0.9 s). Logo flies from the splash centre into the header, shrinking, pink → black (1 s). Menu button slides in from the left, store button fades in place. Hero photos fly in from outside the device: top-left & bottom-left from the left, top-right from the right, bottom-right from right/bottom (staggered). Heading rises from below the screen, then the CTA from further below. | `Splash.jsx`, `Header.jsx`, `Hero.motion.js` |
+| hero → update | Hero photos drift outward to their own side and up, off-screen; heading rises out + fades; CTA lifts a little + fades. Update photo collage rises from below and settles (top avatar/bubble start further left, bottom ones further right, converging); heading + body rise with a fade. Bg white → light grey with pink bottom glow. | `Hero.motion.js`, `Update.motion.js` |
+| update → story | Update content lifts slightly + fades; pink→dark story bg crossfades in; statement, stickers and CTA rise into place with a fade (stickers with a slight scale-up). | `Update.motion.js`, `Story.motion.js` |
+| story → step-profile | Story content lifts + fades. The big "Dating goes social" text travels up from the bottom of the story screen and grows into the step's background text (story copy fades out, step copy fades in – a manual shared-element morph, `BG_TEXT_MORPH`). Bg crossfades to cream. Collage rises from below (most travel), then badge/title/body/CTA. | `Story.motion.js`, `StepLayout.motion.js` |
+| step-profile → step-chemistry | Carousel: collage slides out left, next collage slides in from the right. Title/body crossfade with a small rise; badge number swaps (fade); background text and CTA stay put (the incoming copy of the bg text is revealed only after the outgoing collage has faded, `BG_TEXT_SWAP_S`). Bg + bottom glow crossfade (glow yellow → blue). | `StepLayout.motion.js` |
+| step-chemistry → step-intro | Same carousel. Bg crossfades cream → night, background text fades out, header logo turns white (CSS), glow → pink. | `StepLayout.motion.js` |
+| step-intro → testimonials | **TODO (batch 3)** – currently step content lifts + fades, testimonials uses the default layer transition. | |
+| testimonials → faq → final CTA (+ footer sub-step) | **TODO (batch 3).** | |
+
+Prototype frame ids (for re-capturing): splash `1-10669`, hero `1-11246`, update `1-10698`,
+story `1-10751`, step-profile `1-10820`, step-chemistry `1-10847`, step-intro `1-10872`.
+
+### 8.3 Other animation hooks
+
+* **Sub-step animations** – react to the `subStep` prop (CSS classes, or `animate={...}`);
+  `FinalCta` currently uses CSS transitions.
 
 ---
 
@@ -246,7 +310,8 @@ Hooks are already in place:
 - [ ] FAQ: real answers + questions for "How Rivet Works" and "Safety & Account".
 - [ ] Testimonials: real testimonial data (design repeats one).
 - [ ] FinalCta sub-step 1: is the overlap (button over heading) the intended end state?
-- [ ] Per-screen animations spec.
+- [ ] Animations: owner review of the captured choreography + timing fine-tuning (§8.2).
+- [ ] Animations: is "reverse of the forward transition" right for scrolling up? (currently yes)
 - [ ] Hamburger menu: is a menu overlay needed later? (currently a no-op button)
 
 ---
@@ -256,3 +321,5 @@ Hooks are already in place:
 | Date | Change |
 | --- | --- |
 | 2026-10-01 | Initial static implementation of all screens, step navigation, splash, FAQ accordion, footer sub-step, asset registry, docs + design references. |
+| 2026-10-01 | Animations batch 1: choreography system (`src/animation/`), splash → hero (logo flight, header intro), hero → update, update → story. |
+| 2026-10-01 | Animations batch 2: `StepLayout` choreography – story → step-profile (bg-text morph), step-profile → step-chemistry → step-intro (carousel). `Screen` backdrop now lives in the crossfading `bg` layer. Logo color handoff timing fix. Docs §8. |
