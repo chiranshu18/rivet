@@ -1,0 +1,103 @@
+@use '../../styles/tokens' as *;
+
+.phone {
+  @include place(120, 110, 208, 366);
+  border-radius: u(34);
+  overflow: hidden;
+  background: linear-gradient(180deg, #d4168f 0%, #a10f6f 35%, #3a0a2c 75%, #1d0717 100%);
+  box-shadow: 0 u(20) u(50) rgba(255, 31, 180, 0.15);
+}
+
+.matchTitle {
+  @include text-block(34, 8);
+  @include display(29, 0.95);
+  color: $c-white;
+}
+
+.matchText {
+  @include text-block(228, 16);
+  @include body(9, 1.3);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.proceed {
+  position: absolute;
+  top: u(274);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: u(4) u(10);
+  border-radius: u(5);
+  background: $c-pink;
+  color: $c-ink;
+  @include body(8, 1.2, 600);
+  white-space: nowrap;
+}
+
+.score {
+  position: absolute;
+  top: u(312);
+  left: u(22);
+  right: u(18);
+  display: flex;
+  align-items: center;
+  gap: u(8);
+  padding: u(4);
+  border-radius: u(10);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.scoreValue {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  min-width: u(40);
+  height: u(28);
+  padding: u(6) u(4) 0;
+  border-radius: u(8);
+  background: rgba(255, 31, 180, 0.25);
+  color: $c-pink;
+  @include display(16, 1);
+
+  small {
+    font-size: u(9);
+  }
+}
+
+.scoreText {
+  @include body(9, 1.25);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.matchPhoto {
+  border-radius: u(14);
+  border: u(2) solid rgba(255, 255, 255, 0.6);
+  box-shadow: $shadow-card;
+}
+
+.photoLeft {
+  @include place(230, 98, 112, 112, -6deg);
+}
+
+.photoRight {
+  @include place(246, 206, 118, 110, 8deg);
+}
+
+.heart {
+  border-radius: u(40);
+}
+
+.heartLeft {
+  @include place(290, 6, 98, 98, -12deg);
+}
+
+.heartSmall {
+  @include place(427, 70, 52, 52, 8deg);
+}
+
+.heartRight {
+  @include place(380, 298, 58, 70, 14deg);
+}
+
+.heartBottom {
+  @include place(446, 282, 98, 86, 10deg);
+}

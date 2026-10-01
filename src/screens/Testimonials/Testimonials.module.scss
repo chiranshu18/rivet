@@ -1,0 +1,88 @@
+@use '../../styles/tokens' as *;
+
+.screen {
+  background: linear-gradient(180deg, #e8409c 0%, #ee5fae 25%, #f590bd 50%, #f9bfc4 72%, #fde0cb 100%);
+}
+
+.title {
+  @include text-block(330, 10);
+  @include display(60, 0.95);
+  color: $c-white;
+}
+
+// Blurred pink fade under the header so cards don't fight with the logo.
+.topFade {
+  position: absolute;
+  top: u(-40);
+  left: u(-40);
+  right: u(-40);
+  height: u(190);
+  z-index: 4;
+  background: linear-gradient(180deg, #e8409c 0%, rgba(232, 64, 156, 0.75) 45%, rgba(232, 64, 156, 0) 100%);
+  backdrop-filter: blur(u(10));
+  -webkit-backdrop-filter: blur(u(10));
+  mask-image: linear-gradient(180deg, #000 55%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent 100%);
+  pointer-events: none;
+}
+
+.card {
+  position: absolute;
+  width: u(236);
+  padding: u(14) u(14) u(20);
+  border-radius: u(20);
+  background: $c-white;
+  box-shadow: $shadow-card;
+  text-align: center;
+}
+
+.topLeft {
+  @include place(-70, -96, null, null, -14deg);
+  filter: blur(1px);
+}
+
+.topRight {
+  @include place(22, 208, null, null, 7deg);
+}
+
+.midLeft {
+  @include place(292, -76, null, null, 5deg);
+}
+
+.bottomRight {
+  @include place(548, 266, null, null, 12deg);
+}
+
+.bottomLeft {
+  @include place(700, 40, null, null, -4deg);
+}
+
+.avatar {
+  width: u(76);
+  height: u(76);
+  margin: 0 auto u(10);
+}
+
+.quote {
+  @include display(26, 0.95);
+  white-space: pre-line;
+  margin-bottom: u(8);
+}
+
+.body {
+  @include body(11, 1.35);
+  color: #555;
+  margin-bottom: u(18);
+}
+
+.author {
+  @include body(11, 1.2);
+  color: #666;
+}
+
+.cta {
+  position: absolute;
+  top: u(632);
+  left: u(122);
+  z-index: 5;
+}

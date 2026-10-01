@@ -1,0 +1,45 @@
+@use '../../styles/tokens' as *;
+
+.screen {
+  background: $c-white;
+}
+
+.photo {
+  border-radius: u(20);
+  box-shadow: $shadow-card;
+}
+
+.topLeft {
+  @include place(134, 14, 150, 212, -10deg);
+}
+
+.topRight {
+  @include place(186, 292, 160, 212, 12deg);
+}
+
+.bottomLeft {
+  @include place(728, -14, 150, 205, 10deg);
+}
+
+.bottomRight {
+  @include place(648, 302, 168, 226, 13deg);
+}
+
+.title {
+  @include text-block(334, 12);
+  @include display(60, 0.96);
+  z-index: 2;
+  color: $c-ink;
+}
+
+.accent {
+  color: $c-pink;
+}
+
+.cta {
+  position: absolute;
+  top: u(620);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+}

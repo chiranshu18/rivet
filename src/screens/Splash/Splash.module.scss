@@ -1,0 +1,40 @@
+@use '../../styles/tokens' as *;
+
+.splash {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #ffffff 36%,
+    #f9d9bd 50%,
+    #f8cda8 63%,
+    #fbb5b3 75%,
+    #ff7cc6 88%,
+    $c-pink 100%
+  );
+}
+
+.logoWrap {
+  margin-top: u(68); // logo sits slightly below center in the design
+}
+
+.logoImg {
+  width: u(330);
+}
+
+// Fallback until the glossy 3D logo asset is added.
+.logoText {
+  font-family: $f-logo;
+  font-size: u(118);
+  line-height: 1;
+  color: #ff3fc0;
+  text-shadow:
+    0 u(2) 0 #ff8bd8,
+    0 u(-3) u(2) rgba(255, 255, 255, 0.55),
+    0 u(10) u(24) rgba(220, 0, 140, 0.35);
+}

@@ -1,0 +1,19 @@
+@use '../styles/tokens' as *;
+
+.wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: u(8);
+}
+
+.icon {
+  width: u(18);
+  height: u(18);
+}
+
+.divider {
+  width: 1px;
+  height: u(14);
+  background: currentColor;
+  opacity: 0.4;
+}

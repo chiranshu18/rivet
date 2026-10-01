@@ -1,0 +1,74 @@
+@use '../styles/tokens' as *;
+
+.bubble {
+  position: absolute;
+  padding: u(7) u(12);
+  border-radius: u(14);
+  font-family: $f-body;
+  font-size: u(12);
+  line-height: 1.2;
+  box-shadow: $shadow-soft;
+  white-space: pre-line;
+  --bubble-bg: #{$c-blue};
+  background: var(--bubble-bg);
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: u(-5);
+    width: u(14);
+    height: u(14);
+    background: var(--bubble-bg);
+    border-radius: u(3);
+    transform: rotate(45deg);
+  }
+}
+
+.blue {
+  --bubble-bg: #{$c-blue};
+  color: $c-white;
+}
+
+.pink {
+  --bubble-bg: #{$c-pink};
+  color: $c-white;
+}
+
+.white {
+  --bubble-bg: #{$c-white};
+  color: $c-pink;
+}
+
+.bottomLeft::after {
+  left: u(18);
+}
+
+.bottomRight::after {
+  right: u(18);
+}
+
+.none::after,
+.thought::after {
+  display: none;
+}
+
+.dotLg,
+.dotSm {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--bubble-bg);
+}
+
+.dotLg {
+  bottom: u(-8);
+  left: 50%;
+  width: u(8);
+  height: u(8);
+}
+
+.dotSm {
+  bottom: u(-15);
+  left: calc(50% - #{u(6)});
+  width: u(5);
+  height: u(5);
+}

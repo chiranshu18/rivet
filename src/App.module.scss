@@ -1,0 +1,28 @@
+@use 'sass:math';
+@use './styles/tokens' as *;
+
+$ratio: math.div($frame-w, $frame-h);
+
+// Mobile column. On wider screens it stays 430px wide and centered.
+.app {
+  position: relative;
+  width: 100%;
+  max-width: #{$frame-w}px;
+  height: 100vh;
+  height: 100dvh;
+  margin: 0 auto;
+  overflow: hidden;
+  background: $c-white;
+  touch-action: none;
+  user-select: none;
+
+  // 1 design px. The design canvas (430x932) is fit inside the column
+  // ("contain"), so nothing is cropped on short or narrow viewports.
+  --u: calc(min(100vw, #{$frame-w}px, 100vh * #{$ratio}) / #{$frame-w});
+  --u: calc(min(100vw, #{$frame-w}px, 100dvh * #{$ratio}) / #{$frame-w});
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+}

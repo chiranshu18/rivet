@@ -1,0 +1,44 @@
+@use '../../styles/tokens' as *;
+
+.photo {
+  @include place(172, 96, 274, 292, -3deg);
+  border-radius: u(28);
+}
+
+.avatar {
+  border: u(3) solid $c-white;
+  box-shadow: $shadow-soft;
+  z-index: 2;
+}
+
+.avatarTop {
+  @include place(165, 68, 80, 80);
+}
+
+.avatarRight {
+  @include place(345, 320, 68, 68);
+}
+
+.bubbleTop {
+  @include place(106, 118, null, null, -6deg);
+  font-size: u(11);
+  z-index: 3;
+}
+
+.bubbleRight {
+  @include place(284, 285, null, null, 6deg);
+  font-size: u(11);
+  z-index: 3;
+}
+
+.heart {
+  @include place(384, 54, 96, 84, -10deg);
+  border-radius: u(40);
+  z-index: 2;
+}
+
+.cross {
+  @include place(394, 194, 92, 100, 8deg);
+  border-radius: u(24);
+  z-index: 2;
+}

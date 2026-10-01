@@ -1,0 +1,9 @@
+@use '../styles/tokens' as *;
+
+.screen {
+  @include screen;
+}
+
+.canvas {
+  @include design-canvas;
+}

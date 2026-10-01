@@ -1,0 +1,94 @@
+@use '../../styles/tokens' as *;
+
+.screen {
+  background: $c-white;
+}
+
+.balloons {
+  @include place(118, 24, 172, 94);
+}
+
+.title {
+  @include place(212, 26);
+  @include display(52, 1.02);
+}
+
+// Scrollable region – ends above the "Scroll for more" pill.
+.list {
+  position: absolute;
+  top: u(344);
+  left: u(26);
+  right: u(26);
+  bottom: u(64);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.categoryHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: u(12) u(10);
+  @include body(16, 1.2, 500);
+  text-align: left;
+}
+
+// Design shows the chevron pointing down in both states.
+.chevron {
+  width: u(20);
+  height: u(20);
+  color: $c-pink;
+}
+
+.itemsWrap {
+  overflow: hidden;
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: u(12);
+  padding: u(4) 0 u(12);
+}
+
+.item {
+  border: 1px solid #ececef;
+  border-radius: u(16);
+  background: $c-white;
+  box-shadow: 0 u(2) u(6) rgba(0, 0, 0, 0.03);
+}
+
+.question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: u(10);
+  width: 100%;
+  min-height: u(62);
+  padding: u(14) u(10) u(14) u(12);
+  @include body(15.5, 1.3, 500);
+  text-align: left;
+}
+
+.sign {
+  flex-shrink: 0;
+  width: u(22);
+  height: u(22);
+}
+
+.answerWrap {
+  overflow: hidden;
+}
+
+.answer {
+  padding: 0 u(12) u(16);
+  @include body(15.5, 1.3);
+  color: #a3a3a8;
+}

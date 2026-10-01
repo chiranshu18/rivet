@@ -1,0 +1,60 @@
+@use '../../styles/tokens' as *;
+
+.screen {
+  background: linear-gradient(
+    180deg,
+    $c-gray-bg 0%,
+    $c-gray-bg 80%,
+    #f8e3d8 88%,
+    #fbb2d6 95%,
+    #ff4fc0 100%
+  );
+}
+
+.photo {
+  border-radius: u(24);
+  box-shadow: $shadow-card;
+}
+
+.man {
+  @include place(218, 30, 202, 300, -7deg);
+}
+
+.woman {
+  @include place(312, 202, 206, 312, 7deg);
+}
+
+.avatar {
+  border: u(3) solid $c-white;
+  box-shadow: $shadow-soft;
+  z-index: 2;
+}
+
+.avatarTop {
+  @include place(172, 15, 100, 100);
+}
+
+.avatarBottom {
+  @include place(560, 276, 94, 94);
+}
+
+.bubbleTop {
+  @include place(166, 92, null, null, -4deg);
+  z-index: 3;
+}
+
+.bubbleBottom {
+  @include place(504, 222, null, null, -3deg);
+  z-index: 3;
+}
+
+.title {
+  @include text-block(650, 16);
+  @include display(46, 1.02);
+}
+
+.body {
+  @include text-block(762, 28);
+  @include body(16, 1.4);
+  color: #222;
+}

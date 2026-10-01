@@ -1,0 +1,34 @@
+@use '../styles/tokens' as *;
+
+.header {
+  position: absolute;
+  top: u(30);
+  left: u(12);
+  right: u(12);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+
+  > * {
+    pointer-events: auto;
+  }
+}
+
+.iconBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: u(62);
+  height: u(56);
+  border-radius: u(14);
+  background: $c-white;
+  color: $c-ink;
+  box-shadow: 0 u(2) u(10) rgba(0, 0, 0, 0.06);
+}
+
+.burger {
+  width: u(26);
+  height: u(26);
+}

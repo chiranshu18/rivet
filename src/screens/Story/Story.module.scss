@@ -1,0 +1,60 @@
+@use '../../styles/tokens' as *;
+
+.screen {
+  background: linear-gradient(
+    180deg,
+    #f06ab4 0%,
+    $c-pink 26%,
+    #b0107a 42%,
+    #4a0228 58%,
+    $c-maroon-deep 72%,
+    #1a000c 100%
+  );
+}
+
+.bgText {
+  top: u(780);
+  font-size: u(98);
+  line-height: 0.92;
+}
+
+.statement {
+  @include text-block(200, 8);
+  @include display(55, 1.01);
+  color: $c-white;
+}
+
+.heart {
+  @include place(184, 134, 62, 76, -8deg);
+  border-radius: u(30);
+}
+
+.avatar {
+  border: u(2) solid rgba(255, 255, 255, 0.9);
+  box-shadow: $shadow-soft;
+}
+
+.avatarA {
+  @include place(334, 245, 56, 56);
+}
+
+.avatarB {
+  @include place(364, 278, 58, 58);
+}
+
+.bubblePink {
+  @include place(462, 25, null, null, 8deg);
+  font-size: u(11);
+}
+
+.bubbleWhite {
+  @include place(514, 80, null, null, 4deg);
+  font-size: u(11);
+}
+
+.cta {
+  position: absolute;
+  top: u(658);
+  left: 50%;
+  transform: translateX(-50%);
+}

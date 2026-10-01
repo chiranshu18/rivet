@@ -1,0 +1,86 @@
+@use '../../styles/tokens' as *;
+
+.photo {
+  @include place(184, 106, 258, 262, -3deg);
+  border-radius: u(26);
+}
+
+.verified {
+  @include place(201, 89, null, null, -3deg);
+  display: inline-flex;
+  align-items: center;
+  gap: u(5);
+  height: u(30);
+  padding: 0 u(12) 0 u(8);
+  border-radius: u(10);
+  background: $c-pink;
+  color: $c-white;
+  @include body(13, 1, 500);
+}
+
+.verifiedIcon {
+  width: u(16);
+  height: u(16);
+}
+
+.bubbleFav {
+  @include place(148, 243, null, null, 6deg);
+}
+
+.bubbleWalk {
+  @include place(194, 262, null, null, -6deg);
+  font-size: u(11);
+}
+
+.voice {
+  @include place(384, 66, 140, 52, -6deg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 u(6) 0 u(12);
+  border-radius: u(14);
+  background: #1c1c1f;
+  box-shadow: $shadow-card;
+}
+
+.wave {
+  display: flex;
+  align-items: center;
+  gap: u(2);
+
+  span {
+    width: u(2);
+    border-radius: u(1);
+    background: rgba(255, 255, 255, 0.85);
+  }
+}
+
+.mic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: u(38);
+  height: u(38);
+  border-radius: u(10);
+  background: $c-pink;
+  color: $c-white;
+  font-size: u(16);
+}
+
+.infoCard {
+  @include place(360, 234, 132, null, 4deg);
+  padding: u(12);
+  border-radius: u(14);
+  background: $c-white;
+  box-shadow: $shadow-card;
+}
+
+.infoTitle {
+  @include display(15, 1.05);
+  margin-bottom: u(6);
+}
+
+.infoBody {
+  @include body(8.5, 1.4);
+  color: #555;
+}

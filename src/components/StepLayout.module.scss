@@ -1,0 +1,58 @@
+@use '../styles/tokens' as *;
+
+.screen {
+  &.cream {
+    background: $c-cream;
+  }
+
+  &.night {
+    background: $c-night;
+  }
+}
+
+.glow {
+  position: absolute;
+  left: -20%;
+  right: -20%;
+  bottom: -18%;
+  height: 40%;
+  background: radial-gradient(ellipse at 50% 70%, var(--glow, transparent) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.bgText {
+  top: u(250);
+}
+
+.badge {
+  position: absolute;
+  top: u(534);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.title {
+  @include text-block(584, 16);
+  @include display(42, 1);
+
+  .night & {
+    color: $c-white;
+  }
+}
+
+.body {
+  @include text-block(670, 48);
+  @include body(15, 1.35);
+  color: #5d5d62;
+
+  .night & {
+    color: rgba(255, 255, 255, 0.62);
+  }
+}
+
+.cta {
+  position: absolute;
+  top: u(742);
+  left: 50%;
+  transform: translateX(-50%);
+}

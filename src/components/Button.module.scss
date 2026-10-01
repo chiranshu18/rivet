@@ -1,0 +1,68 @@
+@use '../styles/tokens' as *;
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: u(10);
+  height: u(56);
+  padding: 0 u(30);
+  border-radius: u(16);
+  font-family: $f-body;
+  font-size: u(16);
+  font-weight: 500;
+  white-space: nowrap;
+  transition: scale 0.15s ease;
+
+  // `scale` (not transform) so screens can position buttons with transform.
+  &:active {
+    scale: 0.97;
+  }
+}
+
+// "Get Riveting" on steps
+.pink {
+  height: u(48);
+  min-width: u(140);
+  color: $c-ink;
+  background: linear-gradient(180deg, #ff63cf 0%, $c-pink 100%);
+  box-shadow: 0 u(8) u(20) rgba(255, 31, 180, 0.3);
+}
+
+// Solid pink (testimonials)
+.pinkSolid {
+  min-width: u(170);
+  height: u(62);
+  color: $c-white;
+  background: $c-pink;
+  box-shadow: 0 u(10) u(28) rgba(255, 31, 180, 0.35);
+}
+
+// "Download Rivet Dating" with glow
+.pinkGlow {
+  height: u(58);
+  min-width: u(220);
+  color: $c-white;
+  background: linear-gradient(180deg, #ff5ccd 0%, $c-pink 100%);
+  box-shadow:
+    0 0 0 u(6) rgba(255, 31, 180, 0.18),
+    0 u(10) u(36) rgba(255, 31, 180, 0.55);
+}
+
+// "Download Rivet ▶ " on hero
+.dark {
+  height: u(72);
+  min-width: u(228);
+  border-radius: u(20);
+  color: $c-white;
+  background: $c-ink;
+  font-weight: 400;
+}
+
+// "Read our story"
+.maroon {
+  height: u(56);
+  min-width: u(176);
+  color: $c-pink-soft;
+  background: $c-maroon;
+}

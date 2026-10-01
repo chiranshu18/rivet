@@ -1,0 +1,98 @@
+// Design tokens + helpers. Import in every module with:
+//   @use '<relative path>/styles/tokens' as *;
+// (relative paths on purpose: SASS_PATH breaks CRA's file watching)
+
+// ---- Design frame -------------------------------------------------------
+// Figma frames are 430 x 932. All sizes in the design are written in "design px"
+// and converted with u(), which scales them against the live column width.
+$frame-w: 430;
+$frame-h: 932;
+
+@function u($px) {
+  @return calc(#{$px} * var(--u));
+}
+
+// ---- Colors -------------------------------------------------------------
+$c-pink: #ff1fb4;
+$c-pink-strong: #f40fae;
+$c-pink-soft: #ff5cc8;
+$c-ink: #0d0d10;
+$c-ink-soft: #1b1b1f;
+$c-text-muted: #6e6e73;
+$c-text-faint: #9a9aa0;
+$c-white: #ffffff;
+$c-cream: #fdf3ec;
+$c-gray-bg: #f2f3f5;
+$c-blue: #1f8bff;
+$c-maroon: #5b0b37;
+$c-maroon-deep: #230010;
+$c-night: #121015;
+$c-bg-text: #e6dad3; // big faded "Dating goes social" text
+
+// ---- Typography ---------------------------------------------------------
+$f-display: 'Archivo', 'Arial Narrow', sans-serif; // substitute for heavy condensed grotesque
+$f-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+$f-logo: 'Leckerli One', cursive; // substitute for the custom Rivet wordmark
+
+@mixin display($size, $line: 1) {
+  font-family: $f-display;
+  font-weight: 800;
+  font-stretch: 78%;
+  font-size: u($size);
+  line-height: $line;
+  letter-spacing: -0.025em;
+}
+
+@mixin body($size, $line: 1.35, $weight: 400) {
+  font-family: $f-body;
+  font-weight: $weight;
+  font-size: u($size);
+  line-height: $line;
+}
+
+// ---- Layout helpers -----------------------------------------------------
+@mixin fill {
+  position: absolute;
+  inset: 0;
+}
+
+// Full-bleed screen layer (background lives here).
+@mixin screen {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+// 430x932 design canvas, scaled (via --u) and centered inside its screen.
+// Children are placed with design-px coordinates taken straight from Figma.
+@mixin design-canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: u($frame-w);
+  height: u($frame-h);
+  transform: translate(-50%, -50%);
+}
+
+// Absolute placement in design px. Rotation uses the standalone `rotate`
+// property so Framer Motion transforms (x/y/scale) can be layered on top later.
+@mixin place($top: null, $left: null, $w: null, $h: null, $rot: null) {
+  position: absolute;
+  @if $top { top: u($top); }
+  @if $left { left: u($left); }
+  @if $w { width: u($w); }
+  @if $h { height: u($h); }
+  @if $rot { rotate: $rot; }
+}
+
+// Full-width centered text block starting at design-px `$top`.
+@mixin text-block($top, $pad: 24) {
+  position: absolute;
+  top: u($top);
+  left: u($pad);
+  right: u($pad);
+  text-align: center;
+}
+
+$shadow-card: 0 u(12) u(32) rgba(0, 0, 0, 0.14);
+$shadow-soft: 0 u(6) u(18) rgba(0, 0, 0, 0.1);

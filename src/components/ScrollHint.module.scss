@@ -1,0 +1,53 @@
+@use '../styles/tokens' as *;
+
+.hint {
+  position: absolute;
+  left: 50%;
+  bottom: u(44);
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: u(8);
+  height: u(36);
+  padding: 0 u(16);
+  border-radius: u(12);
+  font-family: $f-body;
+  font-size: u(12);
+  white-space: nowrap;
+  transition:
+    background-color 0.4s ease,
+    color 0.4s ease,
+    border-color 0.4s ease;
+}
+
+.arrow {
+  width: u(12);
+  height: u(12);
+}
+
+// Faded pill on light screens
+.light {
+  color: rgba(0, 0, 0, 0.25);
+  background: rgba(0, 0, 0, 0.04);
+  box-shadow: 0 u(6) u(20) rgba(0, 0, 0, 0.08);
+}
+
+// Dark pill with light border (story)
+.dark {
+  color: $c-white;
+  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+// Transparent pill with border (step 3)
+.outline {
+  color: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+// Muted rose pill (update screen)
+.rose {
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(120, 40, 80, 0.55);
+}

@@ -1,0 +1,186 @@
+@use '../../styles/tokens' as *;
+
+$ease: cubic-bezier(0.65, 0, 0.35, 1);
+$dur: 0.8s;
+
+// Moves an element between its sub-step 0 and sub-step 1 `top` (design px).
+@mixin move($from, $to) {
+  top: u($from);
+  transition: top $dur $ease;
+
+  .compact & {
+    top: u($to);
+  }
+}
+
+.screen {
+  @include screen;
+  background: linear-gradient(180deg, #3b0220 0%, #5d0638 45%, #9a1172 75%, #b8158a 100%);
+}
+
+.canvas {
+  @include design-canvas;
+}
+
+// ---- White card --------------------------------------------------------
+.card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  border-radius: 0;
+  background: $c-white;
+  transition:
+    height $dur $ease,
+    border-radius $dur $ease;
+
+  .compact & {
+    border-radius: 0 0 u(40) u(40);
+    // canvas top offset + 505 design px
+    height: calc(50% - #{u(466)} + #{u(505)});
+  }
+}
+
+// ---- Card content ------------------------------------------------------
+.photo {
+  border-radius: u(14);
+  box-shadow: $shadow-card;
+  transition:
+    opacity 0.5s ease,
+    scale 0.6s $ease;
+
+  .compact & {
+    opacity: 0;
+    scale: 0.8;
+  }
+}
+
+.pTopLeft {
+  @include place(110, 106, 110, 130, -8deg);
+}
+
+.pTopRight {
+  @include place(30, 286, 112, 140, 12deg);
+  filter: blur(u(3));
+}
+
+.pMidLeft {
+  @include place(418, 4, 116, 136, -9deg);
+  z-index: 3;
+}
+
+.pMidRight {
+  @include place(380, 326, 108, 132, 10deg);
+  z-index: 3;
+}
+
+.title {
+  @include text-block(0, 12);
+  @include display(58, 0.95);
+  @include move(255, 122);
+}
+
+.getIt {
+  @include text-block(0, 12);
+  @include display(60, 1);
+  @include move(462, 228);
+}
+
+.cta {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  @include move(385, 213);
+}
+
+.body {
+  @include text-block(0, 44);
+  @include body(14, 1.4);
+  color: #8a8a90;
+  @include move(588, 298);
+}
+
+.follow {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: u(6);
+  white-space: nowrap;
+  @include body(14, 1.2, 500);
+  @include move(714, 376);
+}
+
+.followIcon {
+  width: u(15);
+  height: u(15);
+}
+
+.links {
+  @include text-block(0, 16);
+  display: flex;
+  flex-direction: column;
+  gap: u(8);
+  @include move(804, 450);
+}
+
+.linkRow {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  @include body(12, 1.2);
+  color: #6b6b70;
+
+  a + a::before {
+    content: '•';
+    margin: 0 u(10);
+    color: #333;
+  }
+}
+
+// ---- Footer (revealed in sub-step 1) -----------------------------------
+.footerWordmark {
+  position: absolute;
+  top: u(500);
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: $f-logo;
+  font-size: u(230);
+  line-height: 1;
+  color: rgba(255, 31, 180, 0.16);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.credits {
+  @include text-block(704, 24);
+  @include body(14, 1.3);
+  color: rgba(255, 70, 190, 0.55);
+}
+
+.socials {
+  position: absolute;
+  top: u(752);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: u(14);
+  font-size: u(20);
+  color: rgba(255, 70, 190, 0.55);
+}
+
+.footerAvatar {
+  border: u(3) solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 u(8) u(20) rgba(0, 0, 0, 0.25);
+}
+
+.fa1 { @include place(790, -2, 78, 78); }
+.fa2 { @include place(828, 52, 100, 100); }
+.fa3 { @include place(798, 138, 74, 74); }
+.fa4 { @include place(750, 258, 80, 80); }
+.fa5 { @include place(846, 192, 90, 90); }
+.fa6 { @include place(840, 278, 94, 94); }
+.fa7 { @include place(818, 358, 74, 74); }
