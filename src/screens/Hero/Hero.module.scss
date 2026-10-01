@@ -1,6 +1,6 @@
 @use '../../styles/tokens' as *;
 
-.screen {
+.bg {
   background: $c-white;
 }
 
@@ -40,6 +40,6 @@
   position: absolute;
   top: u(620);
   left: 50%;
-  transform: translateX(-50%);
+  translate: -50% 0;
   z-index: 2;
 }

@@ -7,6 +7,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  pointer-events: none;
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
   background: linear-gradient(
     180deg,
     #ffffff 0%,
@@ -20,6 +26,7 @@
 }
 
 .logoWrap {
+  position: relative;
   margin-top: u(68); // logo sits slightly below center in the design
 }
 
@@ -28,7 +35,10 @@
 }
 
 // Fallback until the glossy 3D logo asset is added.
+// Block (like the header logo, a flex item) so both boxes are line-height
+// tall and the shared-layout flight scales uniformly.
 .logoText {
+  display: block;
   font-family: $f-logo;
   font-size: u(118);
   line-height: 1;

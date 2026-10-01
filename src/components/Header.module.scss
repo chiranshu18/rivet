@@ -28,6 +28,11 @@
   box-shadow: 0 u(2) u(10) rgba(0, 0, 0, 0.06);
 }
 
+// Logo color change while it flies in from the splash.
+.logoFlying {
+  transition: color 0.8s ease 0.1s;
+}
+
 .burger {
   width: u(26);
   height: u(26);

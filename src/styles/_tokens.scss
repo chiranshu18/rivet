@@ -75,7 +75,8 @@ $f-logo: 'Leckerli One', cursive; // substitute for the custom Rivet wordmark
 }
 
 // Absolute placement in design px. Rotation uses the standalone `rotate`
-// property so Framer Motion transforms (x/y/scale) can be layered on top later.
+// property so Framer Motion transforms (x/y/scale) can be layered on top.
+// Same rule for centering: use `translate: -50% 0`, never `transform`.
 @mixin place($top: null, $left: null, $w: null, $h: null, $rot: null) {
   position: absolute;
   @if $top { top: u($top); }

@@ -51,6 +51,16 @@ export default function useStepNavigation({ count, lockMs = 900, enabled = true,
   const next = useCallback(() => goTo(indexRef.current + 1), [goTo]);
   const prev = useCallback(() => goTo(indexRef.current - 1), [goTo]);
 
+  // Also lock right after input gets enabled, so the first screen's intro can play.
+  useEffect(() => {
+    if (!enabled) return undefined;
+    busy.current = true;
+    const t = window.setTimeout(() => {
+      busy.current = false;
+    }, lockMs);
+    return () => window.clearTimeout(t);
+  }, [enabled, lockMs]);
+
   useEffect(() => {
     if (!enabled) return undefined;
 

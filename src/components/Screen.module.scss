@@ -4,6 +4,15 @@
   @include screen;
 }
 
+// z-indexes are shared across screen layers mid-transition (choreographed
+// layers create no stacking context), so every background stays below every
+// canvas: the outgoing screen's elements remain visible over the incoming bg.
+.bg {
+  @include fill;
+  z-index: 0;
+}
+
 .canvas {
   @include design-canvas;
+  z-index: 1;
 }

@@ -1,14 +1,15 @@
+import { motion } from 'framer-motion';
 import styles from './ChatBubble.module.scss';
 
 /**
  * Small speech / thought bubble used across collages.
  * variant: 'blue' | 'pink' | 'white'
  * tail:    'bottomLeft' | 'bottomRight' | 'thought' | 'none'
- * Position + rotation come from `className`.
+ * Position + rotation come from `className`. Extra props go to the motion.div.
  */
-export default function ChatBubble({ children, variant = 'blue', tail = 'bottomLeft', className = '' }) {
+export default function ChatBubble({ children, variant = 'blue', tail = 'bottomLeft', className = '', ...motionProps }) {
   return (
-    <div className={`${styles.bubble} ${styles[variant]} ${styles[tail]} ${className}`}>
+    <motion.div className={`${styles.bubble} ${styles[variant]} ${styles[tail]} ${className}`} {...motionProps}>
       {children}
       {tail === 'thought' && (
         <>
@@ -16,6 +17,6 @@ export default function ChatBubble({ children, variant = 'blue', tail = 'bottomL
           <span className={styles.dotSm} />
         </>
       )}
-    </div>
+    </motion.div>
   );
 }

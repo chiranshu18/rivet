@@ -28,7 +28,7 @@
   position: absolute;
   top: u(534);
   left: 50%;
-  transform: translateX(-50%);
+  translate: -50% 0;
 }
 
 .title {
@@ -54,5 +54,5 @@
   position: absolute;
   top: u(742);
   left: 50%;
-  transform: translateX(-50%);
+  translate: -50% 0;
 }

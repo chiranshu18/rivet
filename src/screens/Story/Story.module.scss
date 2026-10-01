@@ -1,6 +1,6 @@
 @use '../../styles/tokens' as *;
 
-.screen {
+.bg {
   background: linear-gradient(
     180deg,
     #f06ab4 0%,
@@ -56,5 +56,5 @@
   position: absolute;
   top: u(658);
   left: 50%;
-  transform: translateX(-50%);
+  translate: -50% 0;
 }

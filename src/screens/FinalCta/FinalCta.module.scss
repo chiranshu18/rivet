@@ -90,7 +90,7 @@ $dur: 0.8s;
 .cta {
   position: absolute;
   left: 50%;
-  transform: translateX(-50%);
+  translate: -50% 0;
   z-index: 2;
   @include move(385, 213);
 }
@@ -105,7 +105,7 @@ $dur: 0.8s;
 .follow {
   position: absolute;
   left: 50%;
-  transform: translateX(-50%);
+  translate: -50% 0;
   display: inline-flex;
   align-items: center;
   gap: u(6);
@@ -146,7 +146,7 @@ $dur: 0.8s;
   position: absolute;
   top: u(500);
   left: 50%;
-  transform: translateX(-50%);
+  translate: -50% 0;
   font-family: $f-logo;
   font-size: u(230);
   line-height: 1;
@@ -165,7 +165,7 @@ $dur: 0.8s;
   position: absolute;
   top: u(752);
   left: 50%;
-  transform: translateX(-50%);
+  translate: -50% 0;
   display: flex;
   gap: u(14);
   font-size: u(20);

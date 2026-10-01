@@ -15,6 +15,11 @@
   color: $c-white;
 }
 
+// Matches the splash logo, so the splash → header handoff starts seamlessly.
+.splash {
+  color: #ff3fc0;
+}
+
 .img {
   height: u(34);
   width: auto;
