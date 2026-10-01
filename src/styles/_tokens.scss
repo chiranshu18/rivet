@@ -95,5 +95,15 @@ $f-logo: 'Leckerli One', cursive; // substitute for the custom Rivet wordmark
   text-align: center;
 }
 
+// Transparent 3D cut-outs (hearts, balloons; <Asset fit="contain">): soft drop
+// shadow following the shape. `$silver` desaturates tinted art to the design's chrome look.
+@mixin object-3d($silver: false) {
+  @if $silver {
+    filter: grayscale(1) brightness(1.15) drop-shadow(0 u(8) u(10) rgba(0, 0, 0, 0.18));
+  } @else {
+    filter: drop-shadow(0 u(8) u(10) rgba(0, 0, 0, 0.18));
+  }
+}
+
 $shadow-card: 0 u(12) u(32) rgba(0, 0, 0, 0.14);
 $shadow-soft: 0 u(6) u(18) rgba(0, 0, 0, 0.1);

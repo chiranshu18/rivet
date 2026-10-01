@@ -35,7 +35,10 @@ export default function Faq() {
 
   return (
     <Screen bg={styles.bg}>
-      <Asset name="faqBalloons" label="Heart + X balloons" className={styles.balloons} {...m(v.balloons)} />
+      <motion.div className={styles.balloons} {...m(v.balloons)}>
+        <Asset name="faqHeartBalloon" label="Heart balloon" fit="contain" className={styles.balloonHeart} />
+        <Asset name="faqCrossBalloon" label="X balloon" fit="contain" className={styles.balloonCross} />
+      </motion.div>
 
       <motion.h2 className={styles.title} {...m(v.title)}>
         Got a question?

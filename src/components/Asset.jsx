@@ -11,8 +11,9 @@ import styles from './Asset.module.scss';
  * Extra props (variants, custom, ...) go to the underlying motion element.
  *
  * shape: 'rect' | 'circle'
+ * fit:   'cover' (photos) | 'contain' (transparent cut-outs like 3D hearts/balloons)
  */
-export default function Asset({ name, label, className = '', shape = 'rect', alt = '', ...motionProps }) {
+export default function Asset({ name, label, className = '', shape = 'rect', fit = 'cover', alt = '', ...motionProps }) {
   const src = ASSETS[name];
   const shapeClass = shape === 'circle' ? styles.circle : '';
 
@@ -21,7 +22,7 @@ export default function Asset({ name, label, className = '', shape = 'rect', alt
       <motion.img
         src={src}
         alt={alt}
-        className={`${styles.img} ${shapeClass} ${className}`}
+        className={`${styles.img} ${fit === 'contain' ? styles.contain : ''} ${shapeClass} ${className}`}
         draggable={false}
         {...motionProps}
       />

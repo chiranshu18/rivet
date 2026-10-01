@@ -33,12 +33,12 @@
 
 .heart {
   @include place(384, 54, 96, 84, -10deg);
-  border-radius: u(40);
+  @include object-3d;
   z-index: 2;
 }
 
 .cross {
   @include place(394, 194, 92, 100, 8deg);
-  border-radius: u(24);
+  @include object-3d($silver: true);
   z-index: 2;
 }

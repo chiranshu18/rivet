@@ -22,7 +22,7 @@ one scroll gesture (wheel / swipe / key) = the whole screen's content changes to
 | Final CTA → footer reveal (sub-step) | ✅ done (CSS transition) |
 | Default screen enter/exit transition | ✅ basic fade+slide (screens without choreography) |
 | **Per-screen animations** (captured from the Figma prototype, see §8) | ✅ all screens choreographed (batches 1–3); awaiting owner review + timing tuning |
-| Real images / 3D assets | ⏳ TODO – placeholders everywhere (see §6) |
+| Real images / 3D assets | 🟡 stock stand-ins wired everywhere (Unsplash photos, Fluent 3D emoji); real Figma exports pending (see §6) |
 | Real fonts | ⏳ Google Font substitutes for now (see §5) |
 | CTA / menu / store buttons | ❌ intentionally non-functional |
 
@@ -41,7 +41,7 @@ one scroll gesture (wheel / swipe / key) = the whole screen's content changes to
 | Desktop / wide screens | Centered **430 px** column, neutral grey on the sides. |
 | Fonts | Close Google Font substitutes are fine. |
 | FAQ | Simple accordion, stays inside the screen, **only one open at a time**. |
-| Assets | **Labelled dashed placeholders**, swappable from one registry file. |
+| Assets | One registry file. Figma export was blocked (no edit access), so **free stock stand-ins** are used (reuse of the same photo/avatar is fine). WebP for photos, PNG for 3D objects. Logo stays **text**. |
 | CTAs | Non-functional. |
 | Animation source | **"Prototype 1" flow** of the Figma prototype (ignore "Flow 2"). Captured by the agent; owner reviews and fine-tunes timings later. |
 | Animation delivery | **2–3 screens per batch, one commit per batch.** |
@@ -189,23 +189,68 @@ Swap by editing the `<link>` in `public/index.html` + tokens in `_tokens.scss`.
 
 ---
 
-## 6. Assets (placeholders → real files)
+## 6. Assets
 
 * Every image/3D object is rendered via `<Asset name="..." label="..." className=... />`.
 * `src/assets/index.js` is the **single registry**. A `null` entry renders a pink dashed
   labelled box at the exact size/position; an imported file renders an `<img>` with
   `object-fit: cover` using the **same className** (so layout doesn't change).
-* To add one:
+* `fit="contain"` on `<Asset>` is for transparent cut-outs (3D hearts / balloons): no crop.
+  Style those classes with `@include object-3d;` (drop shadow) or `object-3d($silver: true)`
+  (grayscale + brighten, used to turn the purple Fluent art silver). Don't add `border-radius`
+  to them – it clips the art.
+* To swap one:
   1. put the file in `src/assets/images/`
   2. `import step1Photo from './images/step1-photo.jpg';` in `src/assets/index.js`
   3. set `step1Photo: step1Photo`
-* Logo: set `logoWordmark` (header) and `splashLogo` (glossy 3D splash logo); components
-  fall back to the text wordmark while they're `null`.
-* Non-rectangular art (balloons, hearts, cut-out photos) should be exported as transparent
-  PNG/WebP; you may want to remove the placeholder `border-radius` on those classes.
+* Logo: `logoWordmark` (header) and `splashLogo` stay `null` on purpose → text wordmark.
 
 Registry keys are grouped per screen with comments; the placeholder label tells you what goes
-where (e.g. "Photo: couple on sofa").
+where (e.g. "Photo: couple on sofa"). FAQ balloons are two keys: `faqHeartBalloon` +
+`faqCrossBalloon` (was a single `faqBalloons`).
+
+### 6.1 Current stand-ins (sources & licences)
+
+Figma export failed ("no edit access" on the file), so these are **temporary stock assets**.
+Replace with real exports once edit access / a duplicate of the file is available.
+
+* **Photos & avatars** – [Unsplash](https://unsplash.com/license) (Unsplash License: free,
+  commercial use, no attribution required). Downloaded as WebP from
+  `https://images.unsplash.com/photo-<id>?w=<2x>&h=<2x>&fit=crop&crop=faces&fm=webp&q=78`
+  at 2× the design size (avatars 200×200).
+* **3D objects** – [Microsoft Fluent Emoji](https://github.com/microsoft/fluentui-emoji)
+  "3D" PNGs, 256 px (MIT licence).
+
+| File (`src/assets/images/`) | Source id | Used by (registry keys) |
+| --- | --- | --- |
+| `hero-top-left.webp` | Unsplash `1501901609772-df0848060b33` | `heroPhotoTopLeft` |
+| `hero-top-right.webp` | Unsplash `1517677129300-07b130802f46` | `heroPhotoTopRight` |
+| `hero-bottom-left.webp` | Unsplash `1566737236500-c8ac43014a67` | `heroPhotoBottomLeft` |
+| `hero-bottom-right.webp` | Unsplash `1543269865-cbf427effbad` | `heroPhotoBottomRight` |
+| `update-man.webp` | Unsplash `1507003211169-0a1dd7228f2d` | `updatePhotoMan` |
+| `update-woman.webp` | Unsplash `1494790108377-be9c29b29330` | `updatePhotoWoman` |
+| `step1-profile.webp` | Unsplash `1500648767791-00dcc994a43e` | `step1Photo` |
+| `step2-couple.webp` | Unsplash `1501901609772-df0848060b33` | `step2Photo` |
+| `step3-him.webp` | Unsplash `1539571696357-5a69c17a67c6` | `step3PhotoLeft` |
+| `step3-her.webp` | Unsplash `1517841905240-472988babdf9` | `step3PhotoRight` |
+| `cta-friends.webp` | Unsplash `1517486808906-6ca8b3f04846` | `ctaPhotoTopLeft` |
+| `cta-party.webp` | Unsplash `1492684223066-81342ee5ff30` | `ctaPhotoTopRight` |
+| `cta-couple.webp` | Unsplash `1541250848049-b4f7141dca3f` | `ctaPhotoMidLeft` |
+| `cta-dancing.webp` | Unsplash `1504609813442-a8924e83f76e` | `ctaPhotoMidRight` |
+| `avatar-1.webp` | Unsplash `1494790108377-be9c29b29330` | `footerAvatar1` |
+| `avatar-2.webp` | Unsplash `1506794778202-cad84cf45f1d` | `updateAvatarTop`, `footerAvatar2` |
+| `avatar-3.webp` | Unsplash `1524504388940-b1c1722653e1` | `updateAvatarBottom`, `footerAvatar3` |
+| `avatar-4.webp` | Unsplash `1507003211169-0a1dd7228f2d` | `storyAvatarB`, `footerAvatar4` |
+| `avatar-5.webp` | Unsplash `1517677129300-07b130802f46` | `storyAvatarA`, `footerAvatar5` |
+| `avatar-6.webp` | Unsplash `1539571696357-5a69c17a67c6` | `footerAvatar6` |
+| `avatar-7.webp` | Unsplash `1534528741775-53994a69daeb` | `step2AvatarTop`, `footerAvatar7` |
+| `avatar-8.webp` | Unsplash `1508214751196-bcfd4ca60f91` | `testimonialAvatar` |
+| `avatar-9.webp` | Unsplash `1499996860823-5214fcc65f8f` | `step2AvatarRight` |
+| `heart-pink.png` | Fluent "Pink heart" 3D | `storyHeartBalloon`, `step2HeartBalloon`, `step3HeartLeft/Small/Bottom`, `faqHeartBalloon` |
+| `heart-grey.png` | Fluent "Grey heart" 3D (silver filter) | `step3HeartRight` |
+| `cross-grey.png` | Fluent "Multiply" 3D (silver filter) | `step2CrossBalloon`, `faqCrossBalloon` |
+
+The registry in `src/assets/index.js` is the source of truth for the exact key → file mapping.
 
 ---
 
@@ -318,7 +363,9 @@ testimonials `1-10898` (cards low) → `1-10975` (final layout), faq + final CTA
 ## 9. Open points / to confirm
 
 - [ ] Exact fonts (heading grotesque + wordmark) and the SVG logo.
-- [ ] All image / 3D assets (registry keys in `src/assets/index.js`).
+- [ ] Real image / 3D assets from Figma (stock stand-ins for now, §6.1) – needs edit access or a duplicate of the Figma file to export.
+- [x] Logo: stays as text (header wordmark + splash) – confirmed by owner.
+- [ ] StepProfile card copy mixes pronouns ("He's defined by her precision…") – verbatim from design, confirm.
 - [ ] Copy typos in Update screen ("an major update", "that making").
 - [ ] FAQ: real answers + questions for "How Rivet Works" and "Safety & Account".
 - [ ] Testimonials: real testimonial data (design repeats one).
@@ -338,3 +385,4 @@ testimonials `1-10898` (cards low) → `1-10975` (final layout), faq + final CTA
 | 2026-10-01 | Animations batch 1: choreography system (`src/animation/`), splash → hero (logo flight, header intro), hero → update, update → story. |
 | 2026-10-01 | Animations batch 2: `StepLayout` choreography – story → step-profile (bg-text morph), step-profile → step-chemistry → step-intro (carousel). `Screen` backdrop now lives in the crossfading `bg` layer. Logo color handoff timing fix. Docs §8. |
 | 2026-10-01 | Animations batch 3: step-intro → testimonials (cards rise), testimonials → faq (dissolve), faq → final CTA (photos fly in, copy rises; not in prototype). FinalCta background/footer/card moved into a crossfading bg layer. `choreo` `center` only resets displaced properties. |
+| 2026-10-01 | Assets: stock stand-ins for every registry entry (Unsplash WebP photos/avatars, Fluent 3D emoji PNGs). `<Asset fit="contain">` + `object-3d` mixin for transparent 3D art; FAQ balloons split into `faqHeartBalloon` + `faqCrossBalloon`. Logo stays text. Docs §6.1. |

@@ -40,10 +40,15 @@ export default function StepIntro() {
       <Asset name="step3PhotoLeft" label="Photo: him" className={`${styles.matchPhoto} ${styles.photoLeft}`} />
       <Asset name="step3PhotoRight" label="Photo: her" className={`${styles.matchPhoto} ${styles.photoRight}`} />
 
-      <Asset name="step3HeartLeft" label="Pink heart" className={`${styles.heart} ${styles.heartLeft}`} />
-      <Asset name="step3HeartSmall" label="Pink heart" className={`${styles.heart} ${styles.heartSmall}`} />
-      <Asset name="step3HeartRight" label="Silver heart" className={`${styles.heart} ${styles.heartRight}`} />
-      <Asset name="step3HeartBottom" label="Pink heart" className={`${styles.heart} ${styles.heartBottom}`} />
+      <Asset name="step3HeartLeft" label="Pink heart" fit="contain" className={`${styles.heart} ${styles.heartLeft}`} />
+      <Asset name="step3HeartSmall" label="Pink heart" fit="contain" className={`${styles.heart} ${styles.heartSmall}`} />
+      <Asset
+        name="step3HeartRight"
+        label="Silver heart"
+        fit="contain"
+        className={`${styles.heart} ${styles.silver} ${styles.heartRight}`}
+      />
+      <Asset name="step3HeartBottom" label="Pink heart" fit="contain" className={`${styles.heart} ${styles.heartBottom}`} />
     </StepLayout>
   );
 }

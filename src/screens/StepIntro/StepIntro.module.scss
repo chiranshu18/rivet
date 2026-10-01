@@ -83,7 +83,11 @@
 }
 
 .heart {
-  border-radius: u(40);
+  @include object-3d;
+}
+
+.silver {
+  @include object-3d($silver: true);
 }
 
 .heartLeft {

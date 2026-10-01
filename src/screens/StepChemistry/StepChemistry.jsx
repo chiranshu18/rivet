@@ -30,8 +30,8 @@ export default function StepChemistry() {
       </ChatBubble>
       <Asset name="step2AvatarRight" label="Avatar" shape="circle" className={`${styles.avatar} ${styles.avatarRight}`} />
 
-      <Asset name="step2HeartBalloon" label="Heart balloon" className={styles.heart} />
-      <Asset name="step2CrossBalloon" label="X balloon" className={styles.cross} />
+      <Asset name="step2HeartBalloon" label="Heart balloon" fit="contain" className={styles.heart} />
+      <Asset name="step2CrossBalloon" label="X balloon" fit="contain" className={styles.cross} />
     </StepLayout>
   );
 }

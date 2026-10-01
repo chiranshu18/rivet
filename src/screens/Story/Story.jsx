@@ -31,7 +31,7 @@ export default function Story() {
         for one.
       </motion.h2>
 
-      <Asset name="storyHeartBalloon" label="Heart balloon" className={styles.heart} {...m(v.heart)} />
+      <Asset name="storyHeartBalloon" label="Heart balloon" fit="contain" className={styles.heart} {...m(v.heart)} />
       <Asset
         name="storyAvatarA"
         label="Avatar"

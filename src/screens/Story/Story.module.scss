@@ -26,7 +26,7 @@
 
 .heart {
   @include place(184, 134, 62, 76, -8deg);
-  border-radius: u(30);
+  @include object-3d;
 }
 
 .avatar {

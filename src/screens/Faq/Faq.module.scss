@@ -8,6 +8,18 @@
   @include place(118, 24, 172, 94);
 }
 
+// Positions relative to .balloons (design px).
+.balloonHeart {
+  @include place(0, 0, 96, 94, -6deg);
+  @include object-3d;
+  z-index: 1;
+}
+
+.balloonCross {
+  @include place(4, 80, 86, 86, 10deg);
+  @include object-3d($silver: true);
+}
+
 .title {
   @include place(212, 26);
   @include display(52, 1.02);
